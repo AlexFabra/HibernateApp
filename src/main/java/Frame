@@ -1,0 +1,159 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.Color;
+
+
+public class Frame extends JFrame implements ActionListener{
+    private JMenuBar mb;
+    private JMenu finestra;
+    private JScrollPane sTable;
+    private JComboBox cbTable;
+
+    //private JMenuItem select,update,insert,delete;    Si volguessim fer una finestra per tipus de comanda.
+    private JPanel pSelect,pUpdate,pDelete,pInsert,pTable,pWhere,pGen;
+    private JLabel lSelect,lUpdate,lDelete,lInsert,lTable,
+            lTableContentSelect,lTableContentUpdate,lTableContentDelete,lTableContentInsert,
+            lWhere;
+    private JTextField tSelect,tUpdate,tDelete,tInsert,tWhere;
+    private JComboBox cTaules;
+    private JScrollPane sp;
+    private JTextArea taComanda;
+    private JButton bExecutar;
+    private int SIZELETRA=18;
+
+    public Frame() {
+        mb = new JMenuBar();
+        mb.setBackground(new Color(255, 127, 0));
+        setJMenuBar(mb);
+
+        finestra = new JMenu("");
+        finestra.setBackground(new Color(255, 127, 0));
+        finestra.setFont(new Font("Andale Mono", 1, SIZELETRA));
+        finestra.setForeground(new Color(0, 0, 0));
+        mb.add(finestra);
+
+        cbTable = new JComboBox();
+        cbTable.addItem("Plantes");
+        cbTable.addItem("Families");
+        cbTable.addActionListener (new ActionListener () {
+            public void actionPerformed(ActionEvent e) {
+                actualitzaTaules();
+            }
+        });
+
+        tSelect = new JTextField(10);
+        tUpdate = new JTextField(10);
+        tInsert = new JTextField(10);
+        tDelete = new JTextField(10);
+        tWhere = new JTextField(20);
+
+        lTable = new JLabel("TABLA");
+        lSelect = new JLabel("SELECT");
+        lInsert  = new JLabel("INSERT INTO");
+        lDelete = new JLabel("DELETE FROM");
+        lUpdate = new JLabel("UPDATE");
+        lWhere = new JLabel("WHERE");
+
+        lTableContentSelect = new JLabel();
+        lTableContentUpdate = new JLabel();
+        lTableContentDelete= new JLabel();
+        lTableContentInsert = new JLabel();
+
+        pTable =  new JPanel();
+        pSelect = new JPanel();
+        pUpdate = new JPanel();
+        pDelete = new JPanel();
+        pInsert  = new JPanel();
+        pWhere = new JPanel();
+
+        bExecutar = new JButton("EJECUTAR");
+        bExecutar.addActionListener(this);
+
+        pGen = new JPanel();
+
+        //para aprender sobre layoutManagers
+        //https://docs.oracle.com/javase/tutorial/uiswing/layout/visual.html
+        //https://codingpointer.com/java-tutorial/java-box-layout
+
+        pGen.setLayout(new BoxLayout(pGen, BoxLayout.Y_AXIS));
+
+        pTable.add(lTable);
+        pTable.add(cbTable);
+        pGen.add(pTable);
+
+        pSelect.add(lSelect);
+        pSelect.add(tSelect);
+        pSelect.add(lTableContentSelect);
+        pGen.add(pSelect);
+
+        pUpdate.add(lUpdate);
+        pUpdate.add(lTableContentUpdate);
+        pUpdate.add(tUpdate);
+        pGen.add(pUpdate);
+
+        pInsert.add(lInsert);
+        pInsert.add(lTableContentInsert);
+        pInsert.add(tInsert);
+        pGen.add(pInsert);
+
+        pDelete.add(lDelete);
+        pDelete.add(lTableContentDelete);
+        pDelete.add(tDelete);
+        pGen.add(pDelete);
+
+        pWhere.add(lWhere);
+        pWhere.add(tWhere);
+        pGen.add(pWhere);
+
+        pGen.add(bExecutar);
+
+        this.add(pGen);
+
+        //Adjust the size of all components.
+        this.pack();
+
+        initialize();
+    }
+
+    private void actualitzaTaules() {
+        String taulaSelec = cbTable.getSelectedItem().toString();
+        lTableContentSelect.setText("FROM "+taulaSelec);
+        lTableContentUpdate.setText(taulaSelec+ " SET");
+        lTableContentDelete.setText(taulaSelec);
+        lTableContentInsert.setText(taulaSelec);
+    }
+
+    public void initialize(){
+        setTitle("bddlovers");
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setSize(500,400);
+        setVisible(true);
+        setLocationRelativeTo(null);
+        actualitzaTaules();
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if(e.getSource()==bExecutar){
+            Crud crud = new Crud();
+            String taulaSelec = cbTable.getSelectedItem().toString();
+            String comanda;
+            String condicio = tWhere.getText();
+            if(!tSelect.equals("")){
+                comanda=tSelect.getText();
+                crud.select(taulaSelec,comanda,condicio);
+            } else if(!tUpdate.equals("")){
+                comanda=tUpdate.getText();
+                crud.update(taulaSelec,comanda,condicio);
+            } else if(!tDelete.equals("")){
+                comanda=tDelete.getText();
+                crud.delete(taulaSelec,comanda,condicio);
+            } else if(!tInsert.equals("")){
+                comanda=tInsert.getText();
+                crud.insert(taulaSelec,comanda,condicio);
+            }
+        }
+    }
+}

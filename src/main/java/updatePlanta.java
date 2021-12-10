@@ -1,6 +1,5 @@
 import entity.FamiliaEntity;
 import entity.PlantasEntity;
-
 import javax.persistence.*;
 import java.util.List;
 

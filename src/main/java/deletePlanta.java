@@ -27,7 +27,6 @@ public class deletePlanta {
                 System.out.println(e);
             }
 
-
             transaction.commit();
 
 
