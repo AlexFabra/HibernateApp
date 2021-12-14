@@ -141,25 +141,25 @@ public class Frame extends JFrame implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        System.out.println("halo");
         if(e.getSource()==bExecutar){
             Crud crud = new Crud();
             String taulaSelec = cbTable.getSelectedItem().toString();
             String comanda;
             String condicio = tWhere.getText();
+            List result = null;
             if(!tSelect.getText().equals("")){ //si hi ha text en tSelect
                 comanda=tSelect.getText();
-                System.out.println(comanda);
-                crud.select(taulaSelec,comanda,condicio);
+                result= (List) crud.select(taulaSelec,comanda,condicio);
             } else if(!tUpdate.getText().equals("")){ //si hi ha text en tUpdate
                 comanda=tUpdate.getText();
-                crud.update(taulaSelec,comanda,condicio);
+                result= (List) crud.update(taulaSelec,comanda,condicio);
             } else if(!tInsert.getText().equals("")){ //si hi ha text en tInsert
                 comanda=tInsert.getText();
-                crud.insert(taulaSelec,comanda,condicio);
+                result= (List) crud.insert(taulaSelec,comanda,condicio);
             } else { //si no hi ha text en cap s'executarà com a delete
-                crud.delete(taulaSelec, condicio);
+                result= (List) crud.delete(taulaSelec, condicio);
             }
+            textareaComanda.setText(result.toString());
         }
     }
 }
