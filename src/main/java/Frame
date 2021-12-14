@@ -35,8 +35,8 @@ public class Frame extends JFrame implements ActionListener{
         mb.add(finestra);
 
         cbTable = new JComboBox();
-        cbTable.addItem("Plantes");
-        cbTable.addItem("Families");
+        cbTable.addItem("Plantas");
+        cbTable.addItem("Familias");
         cbTable.addActionListener (new ActionListener () {
             public void actionPerformed(ActionEvent e) {
                 actualitzaTaules();
@@ -44,10 +44,15 @@ public class Frame extends JFrame implements ActionListener{
         });
 
         tSelect = new JTextField(10);
+        tSelect.addActionListener(this);
         tUpdate = new JTextField(10);
+        tUpdate.addActionListener(this);
         tInsert = new JTextField(10);
-        tDelete = new JTextField(10);
+        tInsert.addActionListener(this);
+//        tDelete = new JTextField(10);
+//        tDelete.addActionListener(this);
         tWhere = new JTextField(20);
+        tWhere.addActionListener(this);
 
         lTable = new JLabel("TABLA");
         lSelect = new JLabel("SELECT");
@@ -100,7 +105,7 @@ public class Frame extends JFrame implements ActionListener{
 
         pDelete.add(lDelete);
         pDelete.add(lTableContentDelete);
-        pDelete.add(tDelete);
+        //pDelete.add(tDelete);
         pGen.add(pDelete);
 
         pWhere.add(lWhere);
@@ -136,23 +141,24 @@ public class Frame extends JFrame implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        System.out.println("halo");
         if(e.getSource()==bExecutar){
             Crud crud = new Crud();
             String taulaSelec = cbTable.getSelectedItem().toString();
             String comanda;
             String condicio = tWhere.getText();
-            if(!tSelect.equals("")){
+            if(!tSelect.getText().equals("")){ //si hi ha text en tSelect
                 comanda=tSelect.getText();
+                System.out.println(comanda);
                 crud.select(taulaSelec,comanda,condicio);
-            } else if(!tUpdate.equals("")){
+            } else if(!tUpdate.getText().equals("")){ //si hi ha text en tUpdate
                 comanda=tUpdate.getText();
                 crud.update(taulaSelec,comanda,condicio);
-            } else if(!tDelete.equals("")){
-                comanda=tDelete.getText();
-                crud.delete(taulaSelec,comanda,condicio);
-            } else if(!tInsert.equals("")){
+            } else if(!tInsert.getText().equals("")){ //si hi ha text en tInsert
                 comanda=tInsert.getText();
                 crud.insert(taulaSelec,comanda,condicio);
+            } else { //si no hi ha text en cap s'executarà com a delete
+                crud.delete(taulaSelec, condicio);
             }
         }
     }
